@@ -1,0 +1,167 @@
+<!-- Create/Edit Modal -->
+<div
+  class="modal modal-lg fade"
+  id="createResidentModal"
+  tabindex="-1"
+  aria-labelledby="createResidentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createResidentModalLabel">
+          Create Resident
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div id="formErrorMessage" class="alert alert-danger d-none"></div>
+        <form id="createResidentForm" data-method="POST">
+          <input type="hidden" id="residentId" name="id" />
+          <div class="row">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="firstName" class="form-label">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstName"
+                  name="first_name"
+                  required
+                  autocomplete="given-name"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="middleName" class="form-label">Middle Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="middleName"
+                  name="middle_name"
+                  autocomplete="additional-name"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastName"
+                  name="last_name"
+                  required
+                  autocomplete="family-name"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="birthDate" class="form-label">Birth Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="birthDate"
+                  name="birth_date"
+                  required
+                  autocomplete="bday"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="gender" class="form-label">Gender</label>
+                <select
+                  class="form-select"
+                  id="gender"
+                  name="gender"
+                  required
+                  autocomplete="sex"
+                >
+                  <option value="" disabled selected>Select gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="civilStatus" class="form-label">Civil Status</label>
+                <select
+                  class="form-select"
+                  id="civilStatus"
+                  name="civil_status"
+                  required
+                  autocomplete="off"
+                >
+                  <option value="" disabled selected>
+                    Select civil status
+                  </option>
+                  <option value="Single">Single</option>
+                  <option value="Married">Married</option>
+                  <option value="Divorced">Divorced</option>
+                  <option value="Widowed">Widowed</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="contactNumber" class="form-label"
+                  >Contact Number</label
+                >
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="contactNumber"
+                  name="contact_number"
+                  required
+                  autocomplete="tel"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="address"
+                  name="address"
+                  required
+                  autocomplete="street-address"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12 text-end">
+              <button
+                type="button"
+                class="btn btn-secondary me-2"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

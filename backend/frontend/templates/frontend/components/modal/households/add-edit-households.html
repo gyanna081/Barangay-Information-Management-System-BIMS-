@@ -1,0 +1,72 @@
+<!-- Create/Edit Modal -->
+<div
+  class="modal fade"
+  id="createHouseholdModal"
+  tabindex="-1"
+  aria-labelledby="createHouseholdModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createHouseholdModalLabel">
+          Create Household
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="createHouseholdForm">
+          <div class="mb-3">
+            <label for="householdNumber" class="form-label"
+              >Household Number</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="householdNumber"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="householdHead" class="form-label">Household Head</label>
+            <input
+              type="text"
+              class="form-control"
+              id="householdHead"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="numberOfMembers" class="form-label"
+              >Number of Members</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="numberOfMembers"
+              required
+            />
+          </div>
+
+          <div class="row">
+            <div class="col-12 text-end">
+              <button
+                type="button"
+                class="btn btn-secondary me-2"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

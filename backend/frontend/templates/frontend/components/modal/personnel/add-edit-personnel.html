@@ -1,0 +1,168 @@
+<!-- Create/Edit Modal -->
+<div
+  class="modal modal-lg fade"
+  id="createPersonnelModal"
+  tabindex="-1"
+  aria-labelledby="createPersonnelModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createPersonnelModalLabel">
+          Create Personnel
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="createPersonnelForm">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="first_name" class="form-label">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="first_name"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="middle_name" class="form-label">Middle Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="middle_name"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="last_name" class="form-label">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="last_name"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" required />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              required
+            />
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="birthDate" class="form-label">Birth Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="birthDate"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="gender" class="form-label">Gender</label>
+                <select class="form-control" id="gender" required>
+                  <option value="" disabled selected>Select gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="position" class="form-label">Position</label>
+                <select class="form-control" id="position" required>
+                  <option value="" disabled selected>Select position</option>
+                  <option value="Education Member">Education Member</option>
+                  <option value="Civic Religious Organization">
+                    Civic Religious Organization
+                  </option>
+                  <option value="Ways & Means Member">
+                    Ways & Means Member
+                  </option>
+                  <option value="Public Works Member">
+                    Public Works Member
+                  </option>
+                  <option value="Appropriations">Appropriations</option>
+                  <option value="Clean and Green Member">
+                    Clean and Green Member
+                  </option>
+                  <option value="Health and Sanitation Member">
+                    Health and Sanitation Member
+                  </option>
+                  <option value="Peace and Order Member">
+                    Peace and Order Member
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <textarea
+              class="form-control"
+              id="address"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-12 text-end">
+              <button
+                type="button"
+                class="btn btn-secondary me-2"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
