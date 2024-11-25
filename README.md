@@ -2,8 +2,6 @@
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
 ![Django](https://img.shields.io/badge/Django-4.0-green)
 ![React](https://img.shields.io/badge/React-17.0-blue)
-![Firebase](https://img.shields.io/badge/Firebase-Cloud-orange)
-![Google Cloud](https://img.shields.io/badge/Google%20Cloud-Platform-yellow)
 
 ## Features Overview
 
