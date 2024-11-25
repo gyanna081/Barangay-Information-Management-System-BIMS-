@@ -1,0 +1,35 @@
+{% extends "your_app/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Report Incident</h2>
+    <form method="POST" action="{% url 'report_incident' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="dateFiled" class="form-label">Date Filed</label>
+            <input type="date" class="form-control" id="dateFiled" name="dateFiled" required>
+        </div>
+        <div class="mb-3">
+            <label for="incidentDate" class="form-label">Incident Date</label>
+            <input type="date" class="form-control" id="incidentDate" name="incidentDate" required>
+        </div>
+        <div class="mb-3">
+            <label for="complaintDetails" class="form-label">Complaint Details</label>
+            <textarea class="form-control" id="complaintDetails" name="complaintDetails" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="incidentDetails" class="form-label">Incident Details</label>
+            <textarea class="form-control" id="incidentDetails" name="incidentDetails" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-select" id="status" name="status" required>
+                <option value="Pending">Pending</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}

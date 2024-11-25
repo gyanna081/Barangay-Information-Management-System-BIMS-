@@ -1,0 +1,122 @@
+<nav
+  id="sidebar"
+  class="col-md-3 col-lg-2 d-md-block sidebar offcanvas-md offcanvas-start sidebar-blue-bg"
+  data-bs-backdrop="false"
+>
+  <div class="user-info p-3 border-bottom">
+    <div class="d-flex align-items-center flex-wrap">
+      <span class="icon-wrapper me-2 mb-2 mb-sm-0">
+        <i class="fas fa-user-circle text-white fa-2x"></i>
+      </span>
+      <div class="flex-grow-1 min-width-0">
+        <p class="mb-0 text-white text-truncate">
+          {{ request.user.username }}
+          <span
+            class="badge align-items-center text-bg-light rounded-pill ms-1"
+          >
+            {{ request.user.position }}
+          </span>
+        </p>
+        <small class="text-muted text-truncate d-inline-block w-100"
+          >{{ request.user.email }}</small
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="offcanvas-header d-md-none">
+    <h5 class="offcanvas-title text-white">Menu</h5>
+    <button
+      type="button"
+      class="btn-close btn-close-white"
+      data-bs-dismiss="offcanvas"
+      data-bs-target="#sidebar"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="offcanvas-body p-0">
+    <div class="position-sticky">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a
+            class="nav-link d-flex align-items-center"
+            href="{% url 'frontend:residents' %}"
+          >
+            <span class="icon-wrapper me-2"><i class="fas fa-users"></i></span>
+            <span class="menu-text">Residents</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link d-flex align-items-center"
+            href="{% url 'frontend:households' %}"
+          >
+            <span class="icon-wrapper me-2"><i class="fas fa-home"></i></span>
+            <span class="menu-text">Households</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link d-flex align-items-center"
+            href="{% url 'frontend:personnel' %}"
+          >
+            <span class="icon-wrapper me-2"
+              ><i class="fas fa-user-tie"></i
+            ></span>
+            <span class="menu-text">Barangay Officials and Staff</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link d-flex align-items-center"
+            href="{% url 'frontend:complaints' %}"
+          >
+            <span class="icon-wrapper me-2"><i class="fas fa-flag"></i></span>
+            <span class="menu-text">Complaints</span>
+          </a>
+        </li>
+        <!-- New Barangay section -->
+        <li class="nav-item">
+          <a
+            class="nav-link d-flex align-items-center"
+            href="{% url 'frontend:barangays' %}"
+          >
+            <span class="icon-wrapper me-2"><i class="fas fa-city"></i></span>
+            <span class="menu-text">Barangay Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" href="{% url 'frontend:clearances' %}">
+            <span class="icon-wrapper me-2"><i class="fas fa-file-alt"></i></span>
+            <span class="menu-text">Document Management (Clearances)</span>
+          </a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" href="{% url 'frontend:populations' %}">
+            <span class="icon-wrapper me-2"><i class="fas fa-file-alt"></i></span>
+            <span class="menu-text">Population Management (Barangay)</span>
+          </a>
+        </li>
+        <!-- Add more sidebar items as needed -->
+      </ul>
+
+      <!-- Logout option for mobile -->
+      <div class="d-md-none mt-3 border-top pt-3">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a
+              class="nav-link text-danger d-flex align-items-center"
+              href="#"
+              id="logout-btn-mobile"
+            >
+              <span class="icon-wrapper me-2"
+                ><i class="fas fa-sign-out-alt"></i
+              ></span>
+              <span class="menu-text">Logout</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

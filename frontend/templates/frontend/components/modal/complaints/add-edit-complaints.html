@@ -1,0 +1,92 @@
+<div
+  class="modal fade"
+  id="createComplaintModal"
+  tabindex="-1"
+  aria-labelledby="createComplaintModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content glass-effect border-0 shadow-lg">
+      <div class="modal-header bg-gradient-primary text-white">
+        <h5 class="modal-title" id="createComplaintModalLabel">Create Complaint</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="createComplaintForm" data-method="POST">
+          <input type="hidden" id="complaintId" name="complaint_id" />
+
+          <!-- Date Filed (auto-filled, not editable) -->
+          <div class="mb-3">
+            <label for="dateFiled" class="form-label">Date Filed</label>
+            <input
+              type="text"
+              class="form-control"
+              id="dateFiled"
+              name="date_filed"
+              readonly
+            />
+          </div>
+
+          <!-- Incident Date -->
+          <div class="mb-3">
+            <label for="incidentDate" class="form-label">Incident Date</label>
+            <input
+              type="date"
+              class="form-control"
+              id="incidentDate"
+              name="incident_date"
+              required
+              autocomplete="off"
+            />
+          </div>
+
+          <!-- Complaint Details -->
+          <div class="mb-3">
+            <label for="complaintDetails" class="form-label">Complaint Details</label>
+            <textarea
+              class="form-control"
+              id="complaintDetails"
+              name="complaint_details"
+              required
+              rows="3"
+            ></textarea>
+          </div>
+
+          <!-- Incident Details -->
+          <div class="mb-3">
+            <label for="incidentDetails" class="form-label">Incident Details</label>
+            <textarea
+              class="form-control"
+              id="incidentDetails"
+              name="incident_details"
+              required
+              rows="3"
+            ></textarea>
+          </div>
+
+          <!-- Status -->
+          <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-control" id="status" name="status" required>
+              <option value="Pending">Pending</option>
+              <option value="Ongoing">Ongoing</option>
+              <option value="Closed">Closed</option>
+            </select>
+          </div>
+
+          <div class="alert alert-danger d-none" id="formErrorMessage"></div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,54 @@
+{% extends 'frontend/base.html' %} {% load static %} {% block title%}Personnel
+{% endblock %} {% block page_title %}
+<div class="card glass-effect border-0 shadow-lg mb-4">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <i class="fas fa-user-tie fa-fw me-3" style="font-size: 1.2rem"></i>
+        <h6 class="fw-bold mb-0 text-sm text-gradient">Personnel</h6>
+      </div>
+      <div class="btn-group" role="group" aria-label="Personnel actions">
+        {% if request.user.user_type == "Brgy. Admin" %}
+
+        <button
+          type="button"
+          class="btn btn-primary btn-sm shadow-sm"
+          data-bs-toggle="modal"
+          data-bs-target="#createPersonnelModal"
+        >
+          <i class="fas fa-plus-circle fa-sm me-2"></i>Create Personnel
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm shadow-sm"
+          id="printRecordBtn"
+        >
+          <i class="fas fa-print fa-sm me-2"></i>Print Record
+        </button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block content %}
+<div class="card glass-effect border-0 shadow-lg mb-4">
+  <div class="card-body" id="personnelContainer">
+    {% if error_message %}
+    <div class="alert alert-danger" role="alert">{{ error_message }}</div>
+    {% else %}
+    <p>Personnel data will be displayed here.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Create/Edit Modal component -->
+{% include 'frontend/components/modal/personnel/add-edit-personnel.html' %}
+
+<!-- Delete Confirmation Modal -->
+{% include 'frontend/components/modal/personnel/delete-personnel.html' %}
+{%endblock %} {% block extra_js %}
+<script src="{% static 'js/personnel.js' %}"></script>
+<script>
+  const userType = "{{ request.user.user_type }}";
+</script>
+{% endblock %}
