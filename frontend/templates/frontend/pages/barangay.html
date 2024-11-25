@@ -1,7 +1,7 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
 
-{% block title %}Barangays{% endblock %}
+{% block title %}Sitio{% endblock %}
 
 {% block page_title %}
 <div class="card glass-effect border-0 shadow-lg mb-4">
@@ -9,7 +9,7 @@
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
         <i class="fas fa-map-marker-alt fa-fw me-3" style="font-size: 1.2rem"></i>
-        <h6 class="fw-bold mb-0 text-sm text-gradient">Barangays</h6>
+        <h6 class="fw-bold mb-0 text-sm text-gradient">Sitio</h6>
       </div>
       <div class="btn-group" role="group" aria-label="Barangay actions">
         {% if request.user.user_type == "Brgy. Admin" %}
@@ -20,14 +20,14 @@
           data-bs-target="#createBarangayModal"
           onclick="setFormMethod('POST')"
         >
-          <i class="fas fa-plus-circle fa-sm me-2"></i>Create Barangay
+          <i class="fas fa-plus-circle fa-sm me-2"></i>Create Sitio
         </button>
         <button
           type="button"
           class="btn btn-secondary btn-sm shadow-sm"
           id="printBarangayBtn"
         >
-          <i class="fas fa-print fa-sm me-2"></i>Print Barangays
+          <i class="fas fa-print fa-sm me-2"></i>Print Sitio
         </button>
         {% endif %}
       </div>
@@ -41,7 +41,7 @@
     {% if error_message %}
     <div class="alert alert-danger" role="alert">{{ error_message }}</div>
     {% else %}
-    <p>Barangay data will be displayed here.</p>
+    <p>Sitio data will be displayed here.</p>
     {% endif %}
   </div>
 </div>

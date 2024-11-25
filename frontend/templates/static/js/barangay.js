@@ -20,10 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (method === "POST") {
         createBarangayForm.reset();
         document.getElementById("barangayId").value = "";
-        document.getElementById("createBarangayModalLabel").textContent = "Create Barangay";
+        document.getElementById("createBarangayModalLabel").textContent = "Create Sitio";
         document.getElementById("formErrorMessage").classList.add("d-none");
       } else if (method === "PUT") {
-        document.getElementById("createBarangayModalLabel").textContent = "Edit Barangay";
+        document.getElementById("createBarangayModalLabel").textContent = "Edit Sitio";
       }
     }
   
@@ -115,11 +115,11 @@ document.addEventListener("DOMContentLoaded", () => {
           window.location.href = "/";
         } else {
           console.error("Failed to fetch barangays");
-          barangayList.innerHTML = "<p>Failed to load barangays. Please try again later.</p>";
+          barangayList.innerHTML = "<p>Failed to load sitios. Please try again later.</p>";
         }
       } catch (error) {
         console.error("Error fetching barangays:", error);
-        barangayList.innerHTML = "<p>An error occurred while loading barangays. Please try again later.</p>";
+        barangayList.innerHTML = "<p>An error occurred while loading sitios. Please try again later.</p>";
       }
     }
   
@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <thead>
             <tr class="text-center">
                 <th>ID</th>
-                <th>Name</th>
+                <th>Sitio Name</th>
                 <th>Address</th>
                 <th>Population</th>
                 <th>${userType == "Brgy. Admin" ? "Actions" : ""}</th>
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const printContent = `
         <html>
           <head>
-            <title>Barangay Data</title>
+            <title>Sitio Data</title>
             <style>
               body { font-family: Arial, sans-serif; }
               table { border-collapse: collapse; width: 100%; }
@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </style>
           </head>
           <body>
-            <h3>Barangay Table</h3>
+            <h3>Sitio Table</h3>
             ${table.outerHTML}
           </body>
         </html>
