@@ -136,7 +136,7 @@ Ensure you have the following installed on your system:
 
 2. Navigate to the backend directory:
     ```bash
-    cd backend
+    cd brgy
     ```
 
 3. Create a virtual environment:
