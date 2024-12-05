@@ -1,7 +1,8 @@
 # Barangay Information Management System (BIMS) Features
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
 ![Django](https://img.shields.io/badge/Django-4.0-green)
-![React](https://img.shields.io/badge/React-17.0-blue)
+![HTML](https://img.shields.io/badge/HTML-5.0-red)
+![Java](https://img.shields.io/badge/Java-8%2B-orange)
 
 ## Features Overview
 
