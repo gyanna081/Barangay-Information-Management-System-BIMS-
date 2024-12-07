@@ -32,6 +32,21 @@
         {% endif %}
       </div>
     </div>
+    <!-- Search and Filter Section -->
+    <div class="mt-3 d-flex align-items-center">
+      <input
+        type="text"
+        id="searchInput"
+        class="form-control form-control-sm me-2"
+        placeholder="Search by Barangay or Address..."
+      />
+      <select id="filterPopulationRange" class="form-select form-select-sm">
+        <option value="">All</option>
+        <option value="small">1-500</option>
+        <option value="medium">501-1000</option>
+        <option value="large">1001+</option>
+      </select>
+    </div>
   </div>
 </div>
 {% endblock %}

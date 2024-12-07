@@ -32,9 +32,25 @@
         {% endif %}
       </div>
     </div>
+    <!-- Search and Filter Section -->
+    <div class="mt-3 d-flex align-items-center">
+      <input
+        type="text"
+        id="searchInput"
+        class="form-control form-control-sm me-2"
+        placeholder="Search by Sitio name..."
+      />
+      <select id="filterPopulation" class="form-select form-select-sm">
+        <option value="">All Populations</option>
+        <option value="low">Low Population (< 1000)</option>
+        <option value="medium">Medium Population (1000 - 5000)</option>
+        <option value="high">High Population (> 5000)</option>
+      </select>
+    </div>
   </div>
 </div>
 {% endblock %}
+
 {% block content %}
 <div class="card glass-effect border-0 shadow-lg mb-4">
   <div class="card-body" id="barangayContainer">

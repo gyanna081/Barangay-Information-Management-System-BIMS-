@@ -4,16 +4,36 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmDeleteBtn = document.getElementById("confirmDeleteComplaintBtn");
   const modalElement = document.getElementById("createComplaintModal");
   const modalInstance = new bootstrap.Modal(modalElement);
+  const searchInput = document.getElementById("searchInput"); // Search input
+  const filterStatus = document.getElementById("filterStatus"); // Filter dropdown
+  let allComplaints = []; // Store all complaints for filtering
 
   // Add the print button event listener
   const printComplaintBtn = document.getElementById("printComplaintBtn");
   if (printComplaintBtn) {
-    printComplaintBtn.addEventListener("click", () => {
-      printComplaints();
-    });
+    printComplaintBtn.addEventListener("click", printComplaintsData);
   }
 
   fetchComplaints();
+
+  // Event listener for search
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase();
+    const filteredComplaints = allComplaints.filter(complaint =>
+      complaint.incident_details.toLowerCase().includes(query) ||
+      complaint.status.toLowerCase().includes(query)
+    );
+    displayComplaints(filteredComplaints);
+  });
+
+  // Event listener for filter
+  filterStatus.addEventListener("change", () => {
+    const status = filterStatus.value;
+    const filteredComplaints = status
+      ? allComplaints.filter(complaint => complaint.status === status)
+      : allComplaints;
+    displayComplaints(filteredComplaints);
+  });
 
   function setFormMethod(method) {
     createComplaintForm.dataset.method = method;
@@ -34,14 +54,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   createComplaintForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const formData = new FormData(createComplaintForm);
     const data = {
       id: document.getElementById("complaintId").value,
       date_filed: document.getElementById("dateFiled").value,
       incident_date: document.getElementById("incidentDate").value,
       complaint_details: document.getElementById("complaintDetails").value,
       incident_details: document.getElementById("incidentDetails").value,
-      status: document.getElementById("status").value
+      status: document.getElementById("status").value,
     };
 
     const method = createComplaintForm.dataset.method || "POST";
@@ -109,8 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (response.ok) {
-        const complaints = await response.json();
-        displayComplaints(complaints);
+        allComplaints = await response.json(); // Store for filtering
+        displayComplaints(allComplaints);
       } else if (response.status === 401) {
         localStorage.removeItem("token");
         window.location.href = "/";
@@ -136,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <th>Complaint Details</th>
               <th>Incident Details</th>
               <th>Status</th>
-              <th>${userType == "Brgy. Admin" ? "Actions" : ""}</th>
+              <th>${userType === "Brgy. Admin" ? "Actions" : ""}</th>
           </tr>
       </thead>
       <tbody>
@@ -149,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <td>${complaint.incident_details}</td>
                   <td>${complaint.status}</td>
                   <td>
-                    ${userType == "Brgy. Admin" ? `
+                    ${userType === "Brgy. Admin" ? `
                       <i class="fas fa-edit me-2 edit-icon" data-id="${complaint.id}" style="color: #28a745;" data-bs-toggle="tooltip" title="Edit Complaint"></i>
                       <i class="fas fa-trash delete-icon" data-id="${complaint.id}" style="color: #dc3545;" data-bs-toggle="tooltip" title="Delete Complaint"></i>
                     ` : ""}
@@ -162,28 +181,26 @@ document.addEventListener("DOMContentLoaded", () => {
     complaintsList.innerHTML = "";
     complaintsList.appendChild(table);
 
-    if (userType == "Brgy. Admin") {
-      complaints.forEach(complaint => {
-        const editIcon = document.querySelector(`.edit-icon[data-id="${complaint.id}"]`);
-        const deleteIcon = document.querySelector(`.delete-icon[data-id="${complaint.id}"]`);
-
-        if (editIcon) {
-          editIcon.addEventListener("click", () => {
-            setFormMethod("PUT");
-            populateForm(complaint);
-            modalInstance.show();
-          });
-        }
-
-        if (deleteIcon) {
-          deleteIcon.addEventListener("click", () => {
-            confirmDeleteBtn.dataset.complaintId = complaint.id;
-            const deleteModal = new bootstrap.Modal(document.getElementById("deleteComplaintConfirmationModal"));
-            deleteModal.show();
-          });
+    document.querySelectorAll(".edit-icon").forEach(editIcon => {
+      editIcon.addEventListener("click", () => {
+        const complaintId = editIcon.getAttribute("data-id");
+        const complaint = complaints.find(c => c.id == complaintId);
+        if (complaint) {
+          setFormMethod("PUT");
+          populateForm(complaint);
+          modalInstance.show();
         }
       });
-    }
+    });
+
+    document.querySelectorAll(".delete-icon").forEach(deleteIcon => {
+      deleteIcon.addEventListener("click", () => {
+        const complaintId = deleteIcon.getAttribute("data-id");
+        confirmDeleteBtn.dataset.complaintId = complaintId;
+        const deleteModal = new bootstrap.Modal(document.getElementById("deleteComplaintConfirmationModal"));
+        deleteModal.show();
+      });
+    });
   }
 
   function populateForm(complaint) {
@@ -197,18 +214,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function printComplaintsData() {
     const printWindow = window.open("", "_blank");
-    const table = document
-      .querySelector("#complaintContainer table")
-      .cloneNode(true);
-  
+    const table = document.querySelector("#complaintContainer table").cloneNode(true);
+
     const headers = table.querySelectorAll("th");
     const rows = table.querySelectorAll("tbody tr");
-  
+
     if (headers.length > 0) {
       headers[headers.length - 1].remove();
     }
-    rows.forEach((row) => row.deleteCell(-1));
-  
+    rows.forEach(row => row.deleteCell(-1));
+
     const printContent = `
       <html>
         <head>
@@ -226,14 +241,9 @@ document.addEventListener("DOMContentLoaded", () => {
         </body>
       </html>
     `;
-  
+
     printWindow.document.write(printContent);
     printWindow.document.close();
     printWindow.print();
-  }
-  
-  const printBtn = document.getElementById("printComplaintBtn");
-  if (printBtn) {
-    printBtn.addEventListener("click", printComplaintsData);
   }
 });

@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const householdContainer = document.getElementById("householdContainer");
+  const searchInput = document.getElementById("searchInput"); // Search input
+  const filterMembers = document.getElementById("filterMembers"); // Filter dropdown
+  let allHouseholds = []; // Store all households for filtering
 
   const fetchHouseholds = async () => {
     try {
@@ -8,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Failed to fetch households");
       }
       const data = await response.json();
+      allHouseholds = data; // Store for filtering
       return data;
     } catch (error) {
       console.error("Error fetching households:", error);
@@ -29,9 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
         <tr class="text-center">
           <th>ID</th>
           <th>Household ID</th>
-          <th>Address</th>
+          <th>Head</th>
           <th>Number of Members</th>
-          <th> ${userType == "Brgy. Admin" ? "Actions" : ""}</th>
+          <th>${userType == "Brgy. Admin" ? "Actions" : ""}</th>
         </tr>
       </thead>
       <tbody>
@@ -139,80 +143,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  document
-    .getElementById("confirmDeleteBtn")
-    .addEventListener("click", (event) => {
-      const householdId = event.target.getAttribute("data-household-id");
-      deleteHousehold(householdId);
-      const modal = bootstrap.Modal.getInstance(
-        document.getElementById("deleteConfirmationModal")
-      );
-      modal.hide();
+  // Event listener for search input
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase();
+    const filteredHouseholds = allHouseholds.filter(
+      (household) =>
+        household.household_number.toLowerCase().includes(query) ||
+        household.household_head.toLowerCase().includes(query)
+    );
+    renderHouseholds(filteredHouseholds);
+  });
+
+  // Event listener for filter dropdown
+  filterMembers.addEventListener("change", () => {
+    const filter = filterMembers.value;
+    const filteredHouseholds = allHouseholds.filter((household) => {
+      if (filter === "small") return household.number_of_members <= 3;
+      if (filter === "medium")
+        return household.number_of_members >= 4 && household.number_of_members <= 6;
+      if (filter === "large") return household.number_of_members >= 7;
+      return true; // No filter applied
     });
+    renderHouseholds(filteredHouseholds);
+  });
 
   fetchHouseholds().then(renderHouseholds);
 });
-
-document
-  .getElementById("createHouseholdForm")
-  .addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const householdNumber = document.getElementById("householdNumber").value;
-    const householdHead = document.getElementById("householdHead").value;
-    const numberOfMembers = document.getElementById("numberOfMembers").value;
-    const householdId = event.target.getAttribute("data-household-id");
-
-    const url = householdId
-      ? `/brgy/households/${householdId}/`
-      : "/brgy/households/";
-    const method = householdId ? "PUT" : "POST";
-
-    try {
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          household_number: householdNumber,
-          household_head: householdHead,
-          number_of_members: numberOfMembers,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          householdId
-            ? "Failed to update household"
-            : "Failed to create household"
-        );
-      }
-
-      alert(
-        householdId
-          ? "Household updated successfully"
-          : "Household created successfully"
-      );
-      location.reload();
-    } catch (error) {
-      console.error("Error:", error);
-      alert(error.message);
-    }
-  });
-
-document
-  .getElementById("createHouseholdModal")
-  .addEventListener("hidden.bs.modal", (event) => {
-    document.getElementById("createHouseholdModalLabel").textContent =
-      "Create Household";
-    document.querySelector(
-      '#createHouseholdForm button[type="submit"]'
-    ).textContent = "Submit";
-    document
-      .getElementById("createHouseholdForm")
-      .removeAttribute("data-household-id");
-    document.getElementById("createHouseholdForm").reset();
-  });
 
 const printHouseholdData = () => {
   const printWindow = window.open("", "_blank");

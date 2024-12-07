@@ -1,18 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const logoutBtn = document.getElementById("logout-btn");
   const residentsList = document.getElementById("residentContainer");
   const createResidentForm = document.getElementById("createResidentForm");
   const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
   const modalElement = document.getElementById("createResidentModal");
   const modalInstance = new bootstrap.Modal(modalElement);
 
-  fetchResidents();
+  const searchInput = document.getElementById("searchInput");
+  const filterGender = document.getElementById("filterGender");
+  const filterCivilStatus = document.getElementById("filterCivilStatus");
 
-  logoutBtn.addEventListener("click", (event) => {
-    event.preventDefault();
-    localStorage.removeItem("token");
-    window.location.href = "/";
-  });
+  let residentsData = [];
+
+  fetchResidents();
 
   function setFormMethod(method) {
     createResidentForm.dataset.method = method;
@@ -107,8 +106,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (response.ok) {
-        const residents = await response.json();
-        displayResidents(residents);
+        residentsData = await response.json();
+        displayResidents(residentsData);
       } else if (response.status === 401) {
         localStorage.removeItem("token");
         window.location.href = "/";
@@ -137,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <th>Civil Status</th>
               <th>Contact Number</th>
               <th>Address</th>
-              <th> ${userType == "Brgy. Admin" ? "Actions" : ""}</th>
+              <th>${userType == "Brgy. Admin" ? "Actions" : ""}</th>
           </tr>
       </thead>
       <tbody>
@@ -146,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
               (resident) => `
               <tr class="text-center">
                   <td>${resident.id}</td>
-                  <td>${resident.first_name} ${resident.middle_name} ${
+                  <td>${resident.first_name} ${resident.middle_name || ""} ${
                 resident.last_name
               }</td>
                   <td>${resident.birth_date}</td>
@@ -211,54 +210,28 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function populateForm(resident) {
-    document.getElementById("residentId").value = resident.id;
-    document.getElementById("firstName").value = resident.first_name;
-    document.getElementById("middleName").value = resident.middle_name;
-    document.getElementById("lastName").value = resident.last_name;
-    document.getElementById("birthDate").value = resident.birth_date;
-    document.getElementById("gender").value = resident.gender;
-    document.getElementById("civilStatus").value = resident.civil_status;
-    document.getElementById("contactNumber").value = resident.contact_number;
-    document.getElementById("address").value = resident.address;
+  function filterResidents() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const selectedGender = filterGender.value;
+    const selectedCivilStatus = filterCivilStatus.value;
+
+    const filteredResidents = residentsData.filter((resident) => {
+      const matchesSearch =
+        resident.first_name.toLowerCase().includes(searchTerm) ||
+        resident.last_name.toLowerCase().includes(searchTerm) ||
+        String(resident.id).includes(searchTerm);
+      const matchesGender =
+        !selectedGender || resident.gender === selectedGender;
+      const matchesCivilStatus =
+        !selectedCivilStatus || resident.civil_status === selectedCivilStatus;
+
+      return matchesSearch && matchesGender && matchesCivilStatus;
+    });
+
+    displayResidents(filteredResidents);
   }
 
-  function printResidentsData() {
-    const printWindow = window.open("", "_blank");
-    const table = document
-      .querySelector("#residentContainer table")
-      .cloneNode(true);
-
-    const headers = table.querySelectorAll("th");
-    const rows = table.querySelectorAll("tbody tr");
-    headers[headers.length - 1].remove();
-    rows.forEach((row) => row.deleteCell(-1));
-
-    const printContent = `
-      <html>
-        <head>
-          <title>Residents Data</title>
-          <style>
-            body { font-family: Arial, sans-serif; }
-            table { border-collapse: collapse; width: 100%; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-          </style>
-        </head>
-        <body>
-          <h3>Residents Table</h3>
-          ${table.outerHTML}
-        </body>
-      </html>
-    `;
-
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-    printWindow.print();
-  }
-
-  const printBtn = document.getElementById("printRecordBtn");
-  if (printBtn) {
-    printBtn.addEventListener("click", printResidentsData);
-  }
+  searchInput.addEventListener("input", filterResidents);
+  filterGender.addEventListener("change", filterResidents);
+  filterCivilStatus.addEventListener("change", filterResidents);
 });

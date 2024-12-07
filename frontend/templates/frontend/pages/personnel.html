@@ -1,5 +1,9 @@
-{% extends 'frontend/base.html' %} {% load static %} {% block title%}Personnel
-{% endblock %} {% block page_title %}
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}Personnel{% endblock %}
+
+{% block page_title %}
 <div class="card glass-effect border-0 shadow-lg mb-4">
   <div class="card-body">
     <div class="d-flex justify-content-between align-items-center">
@@ -9,7 +13,6 @@
       </div>
       <div class="btn-group" role="group" aria-label="Personnel actions">
         {% if request.user.user_type == "Brgy. Admin" %}
-
         <button
           type="button"
           class="btn btn-primary btn-sm shadow-sm"
@@ -28,9 +31,36 @@
         {% endif %}
       </div>
     </div>
+
+    <!-- Search and Filter Section -->
+    <div class="mt-3 row">
+      <div class="col-md-6 mb-2">
+        <input
+          type="text"
+          id="searchInput"
+          class="form-control form-control-sm"
+          placeholder="Search by Name or Position..."
+        />
+      </div>
+      <div class="col-md-6 mb-2">
+        <select id="filterPosition" class="form-select form-select-sm">
+          <option value="">All Positions</option>
+          <option value="Education Member">Education Member</option>
+          <option value="Civic Religious Organization">Civic Religious Organization</option>
+          <option value="Ways & Means Member">Ways & Means Member</option>
+          <option value="Public Works Member">Public Works Member</option>
+          <option value="Appropriations">Appropriations</option>
+          <option value="Clean and Green Member">Clean and Green Member</option>
+          <option value="Health and Sanitation Member">Health and Sanitation Member</option>
+          <option value="Peace and Order Member">Peace and Order Member</option>
+        </select>
+      </div>
+    </div>
   </div>
 </div>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <div class="card glass-effect border-0 shadow-lg mb-4">
   <div class="card-body" id="personnelContainer">
     {% if error_message %}
@@ -46,7 +76,9 @@
 
 <!-- Delete Confirmation Modal -->
 {% include 'frontend/components/modal/personnel/delete-personnel.html' %}
-{%endblock %} {% block extra_js %}
+{% endblock %}
+
+{% block extra_js %}
 <script src="{% static 'js/personnel.js' %}"></script>
 <script>
   const userType = "{{ request.user.user_type }}";

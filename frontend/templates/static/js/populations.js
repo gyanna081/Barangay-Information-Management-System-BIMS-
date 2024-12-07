@@ -5,12 +5,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalElement = document.getElementById("createPopulationModal");
     const modalInstance = new bootstrap.Modal(modalElement);
 
+    const searchInput = document.getElementById("searchInput"); // Search input
+    const filterPopulationRange = document.getElementById("filterPopulationRange"); // Filter dropdown
+    let allPopulations = []; // Store all populations for filtering
+
     // Add the print button event listener
     const printPopulationBtn = document.getElementById("printPopulationBtn");
     if (printPopulationBtn) {
-        printPopulationBtn.addEventListener("click", () => {
-            printPopulations();
-        });
+        printPopulationBtn.addEventListener("click", printPopulations);
     }
 
     fetchPopulations();
@@ -34,13 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     createPopulationForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const formData = new FormData(createPopulationForm);
         const data = {
             id: document.getElementById("populationId").value,
             barangay_id: document.getElementById("barangayId").value,
             name: document.getElementById("barangayName").value,
             address: document.getElementById("barangayAddress").value,
-            population: document.getElementById("barangayPopulation").value
+            population: document.getElementById("barangayPopulation").value,
         };
 
         const method = createPopulationForm.dataset.method || "POST";
@@ -63,7 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 modalInstance.hide();
             } else {
                 const errorMsg = await response.json();
-                document.getElementById("formErrorMessage").textContent = errorMsg.error || "Failed to save population.";
+                document.getElementById("formErrorMessage").textContent =
+                    errorMsg.error || "Failed to save population.";
                 document.getElementById("formErrorMessage").classList.remove("d-none");
             }
         } catch (error) {
@@ -83,7 +85,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (response.ok) {
                 fetchPopulations();
-                const deleteModal = bootstrap.Modal.getInstance(document.getElementById("deletePopulationConfirmationModal"));
+                const deleteModal = bootstrap.Modal.getInstance(
+                    document.getElementById("deletePopulationConfirmationModal")
+                );
                 deleteModal.hide();
             } else {
                 console.error("Failed to delete population");
@@ -109,17 +113,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (response.ok) {
                 const populations = await response.json();
+                allPopulations = populations; // Store for filtering
                 displayPopulations(populations);
             } else if (response.status === 401) {
                 localStorage.removeItem("token");
                 window.location.href = "/";
             } else {
                 console.error("Failed to fetch populations");
-                populationList.innerHTML = "<p>Failed to load populations. Please try again later.</p>";
+                populationList.innerHTML =
+                    "<p>Failed to load populations. Please try again later.</p>";
             }
         } catch (error) {
             console.error("Error fetching populations:", error);
-            populationList.innerHTML = "<p>An error occurred while loading populations. Please try again later.</p>";
+            populationList.innerHTML =
+                "<p>An error occurred while loading populations. Please try again later.</p>";
         }
     }
 
@@ -137,20 +144,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 </tr>
             </thead>
             <tbody>
-                ${populations.map(population => `
+                ${populations
+                    .map(
+                        (population) => `
                     <tr class="text-center">
                         <td>${population.id}</td>
                         <td>${population.name}</td>
                         <td>${population.address}</td>
                         <td>${population.population}</td>
                         <td>
-                          ${userType === "Brgy. Admin" ? `
+                          ${userType === "Brgy. Admin"
+                                ? `
                             <i class="fas fa-edit me-2 edit-icon" data-id="${population.id}" style="color: #28a745;" data-bs-toggle="tooltip" title="Edit Population"></i>
                             <i class="fas fa-trash delete-icon" data-id="${population.id}" style="color: #dc3545;" data-bs-toggle="tooltip" title="Delete Population"></i>
-                          ` : ""}
+                          `
+                                : ""}
                         </td>
                     </tr>
-                `).join("")}
+                `
+                    )
+                    .join("")}
             </tbody>
         `;
 
@@ -158,13 +171,12 @@ document.addEventListener("DOMContentLoaded", () => {
         populationList.appendChild(table);
 
         if (userType === "Brgy. Admin") {
-            populations.forEach(population => {
+            populations.forEach((population) => {
                 const editIcon = document.querySelector(`.edit-icon[data-id="${population.id}"]`);
                 const deleteIcon = document.querySelector(`.delete-icon[data-id="${population.id}"]`);
 
                 if (editIcon) {
                     editIcon.addEventListener("click", () => {
-                        console.log(`Editing Population ID: ${population.id}`); // Debugging output
                         setFormMethod("PUT");
                         populateForm(population);
                         modalInstance.show();
@@ -173,9 +185,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (deleteIcon) {
                     deleteIcon.addEventListener("click", () => {
-                        console.log(`Deleting Population ID: ${population.id}`); // Debugging output
                         confirmDeleteBtn.dataset.populationId = population.id;
-                        const deleteModal = new bootstrap.Modal(document.getElementById("deletePopulationConfirmationModal"));
+                        const deleteModal = new bootstrap.Modal(
+                            document.getElementById("deletePopulationConfirmationModal")
+                        );
                         deleteModal.show();
                     });
                 }
@@ -183,9 +196,31 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Search and Filter Logic
+    searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+        const filteredPopulations = allPopulations.filter(
+            (pop) =>
+                pop.name.toLowerCase().includes(query) ||
+                pop.address.toLowerCase().includes(query)
+        );
+        displayPopulations(filteredPopulations);
+    });
+
+    filterPopulationRange.addEventListener("change", () => {
+        const filter = filterPopulationRange.value;
+        const filteredPopulations = allPopulations.filter((pop) => {
+            if (filter === "small") return pop.population <= 500;
+            if (filter === "medium") return pop.population > 500 && pop.population <= 1000;
+            if (filter === "large") return pop.population > 1000;
+            return true;
+        });
+        displayPopulations(filteredPopulations);
+    });
+
     function populateForm(population) {
         document.getElementById("populationId").value = population.id;
-        document.getElementById("barangayId").value = population.barangay_id; // Ensure the correct field exists
+        document.getElementById("barangayId").value = population.barangay_id;
         document.getElementById("barangayName").value = population.name;
         document.getElementById("barangayAddress").value = population.address;
         document.getElementById("barangayPopulation").value = population.population;
@@ -193,9 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function printPopulations() {
         const printWindow = window.open("", "_blank");
-        const table = document
-            .querySelector("#populationContainer table")
-            .cloneNode(true);
+        const table = document.querySelector("#populationContainer table").cloneNode(true);
 
         const headers = table.querySelectorAll("th");
         const rows = table.querySelectorAll("tbody tr");
@@ -226,10 +259,5 @@ document.addEventListener("DOMContentLoaded", () => {
         printWindow.document.write(printContent);
         printWindow.document.close();
         printWindow.print();
-    }
-
-    const printBtn = document.getElementById("printPopulationBtn");
-    if (printBtn) {
-        printBtn.addEventListener("click", printPopulations);
     }
 });
