@@ -25,16 +25,20 @@ def personnel(request):
 
 @login_required(login_url='/')
 def complaints(request):
-    return render(request, 'frontend/pages/complaints.html')  # Existing complaints view
+    return render(request, 'frontend/pages/complaints.html')
 
 @login_required(login_url='/')
-def barangays(request):  # New barangay view
+def barangays(request):
     return render(request, 'frontend/pages/barangay.html')
 
 @login_required(login_url='/')
-def clearances(request):  # New clearance view
-    return render(request, 'frontend/pages/clearances.html')  # Existing clearances view
+def clearances(request):
+    return render(request, 'frontend/pages/clearances.html')
 
 @login_required(login_url='/')
-def populations(request):  # New populations view for managing barangay population data
+def populations(request):
     return render(request, 'frontend/pages/population.html')
+
+@login_required(login_url='/')
+def businesses(request):  # New business management view
+    return render(request, 'frontend/pages/business.html')

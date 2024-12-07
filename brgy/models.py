@@ -77,7 +77,6 @@ class Clearance(models.Model):
 
     def __str__(self):
         return self.name
-    
 
 class Population(models.Model):
     barangay_id = models.AutoField(primary_key=True)
@@ -86,4 +85,15 @@ class Population(models.Model):
     population = models.IntegerField()
 
     def __str__(self):
-        return self.name   
+        return self.name
+
+# New Business Model
+class Business(models.Model):
+    business_id = models.AutoField(primary_key=True)
+    business_name = models.CharField(max_length=255)
+    business_type = models.CharField(max_length=255)
+    permit_number = models.CharField(max_length=50, unique=True)
+    date_issued = models.DateField()
+
+    def __str__(self):
+        return self.business_name

@@ -1,5 +1,14 @@
 from rest_framework import serializers
-from .models import CustomUser, Resident, Household, Complaints, Barangay, Clearance, Population
+from .models import (
+    CustomUser,
+    Resident,
+    Household,
+    Complaints,
+    Barangay,
+    Clearance,
+    Population,
+    Business  # Import the Business model
+)
 from django.contrib.auth.hashers import make_password
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -31,8 +40,8 @@ class BarangaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Barangay
         fields = '__all__'
-# New Clearance serializer       
-#  
+
+# New Clearance serializer
 class ClearanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Clearance
@@ -41,4 +50,10 @@ class ClearanceSerializer(serializers.ModelSerializer):
 class PopulationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Population
+        fields = '__all__'
+
+# New Business serializer
+class BusinessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Business
         fields = '__all__'

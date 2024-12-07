@@ -1,6 +1,24 @@
 from rest_framework import viewsets
-from .models import CustomUser, Resident, Household, Complaints, Barangay, Clearance, Population
-from .serializers import CustomUserSerializer, ResidentSerializer, HouseholdSerializer, ComplaintsSerializer, BarangaySerializer, ClearanceSerializer, PopulationSerializer
+from .models import (
+    CustomUser,
+    Resident,
+    Household,
+    Complaints,
+    Barangay,
+    Clearance,
+    Population,
+    Business  # Import the Business model
+)
+from .serializers import (
+    CustomUserSerializer,
+    ResidentSerializer,
+    HouseholdSerializer,
+    ComplaintsSerializer,
+    BarangaySerializer,
+    ClearanceSerializer,
+    PopulationSerializer,
+    BusinessSerializer  # Import the Business serializer
+)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -28,22 +46,25 @@ class ComplaintsViewSet(viewsets.ModelViewSet):
     queryset = Complaints.objects.all()
     serializer_class = ComplaintsSerializer
 
-# New ViewSet for Barangay
+# ViewSet for Barangay
 class BarangayViewSet(viewsets.ModelViewSet):
     queryset = Barangay.objects.all()
     serializer_class = BarangaySerializer
 
-# New ViewSet for Barangay
+# ViewSet for Clearance
 class ClearanceViewSet(viewsets.ModelViewSet):
     queryset = Clearance.objects.all()
     serializer_class = ClearanceSerializer
 
+# ViewSet for Population
 class PopulationViewSet(viewsets.ModelViewSet):
     queryset = Population.objects.all()
     serializer_class = PopulationSerializer
 
-
-    
+# ViewSet for Business
+class BusinessViewSet(viewsets.ModelViewSet):
+    queryset = Business.objects.all()
+    serializer_class = BusinessSerializer
 
 @api_view(['POST'])
 def LoginAPIView(request):

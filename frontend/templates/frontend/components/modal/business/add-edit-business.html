@@ -1,0 +1,85 @@
+<div
+  class="modal fade"
+  id="createBusinessModal"
+  tabindex="-1"
+  aria-labelledby="createBusinessModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content glass-effect border-0 shadow-lg">
+      <div class="modal-header bg-gradient-primary text-white">
+        <h5 class="modal-title" id="createBusinessModalLabel">Create/Update Business</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="createBusinessForm" data-method="POST">
+          <input type="hidden" id="businessId" name="business_id" />
+
+          <!-- Business Name -->
+          <div class="mb-3">
+            <label for="businessName" class="form-label">Business Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="businessName"
+              name="business_name"
+              required
+              autocomplete="off"
+            />
+          </div>
+
+          <!-- Business Type -->
+          <div class="mb-3">
+            <label for="businessType" class="form-label">Business Type</label>
+            <input
+              type="text"
+              class="form-control"
+              id="businessType"
+              name="business_type"
+              required
+              autocomplete="off"
+            />
+          </div>
+
+          <!-- Permit Number -->
+          <div class="mb-3">
+            <label for="permitNumber" class="form-label">Permit Number</label>
+            <input
+              type="text"
+              class="form-control"
+              id="permitNumber"
+              name="permit_number"
+              required
+              autocomplete="off"
+            />
+          </div>
+
+          <!-- Date Issued -->
+          <div class="mb-3">
+            <label for="dateIssued" class="form-label">Date Issued</label>
+            <input
+              type="date"
+              class="form-control"
+              id="dateIssued"
+              name="date_issued"
+              required
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="alert alert-danger d-none" id="formErrorMessage"></div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

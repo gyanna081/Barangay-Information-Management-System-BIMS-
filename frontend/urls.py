@@ -11,7 +11,8 @@ urlpatterns = [
     path('households/', views.households, name='households'),
     path('personnel/', views.personnel, name='personnel'),
     path('complaints/', views.complaints, name='complaints'),
-    path('barangays/', views.barangays, name='barangays'),  # Add this line
+    path('barangays/', views.barangays, name='barangays'),
     path('clearances/', views.clearances, name='clearances'),
     path('populations/', views.populations, name='populations'),
+    path('businesses/', views.businesses, name='businesses'),  # Add this line
 ]
