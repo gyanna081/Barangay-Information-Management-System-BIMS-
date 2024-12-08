@@ -4,11 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmDeleteBtn = document.getElementById("confirmDeleteComplaintBtn");
   const modalElement = document.getElementById("createComplaintModal");
   const modalInstance = new bootstrap.Modal(modalElement);
-  const searchInput = document.getElementById("searchInput"); // Search input
-  const filterStatus = document.getElementById("filterStatus"); // Filter dropdown
+  const searchInput = document.getElementById("searchInput");
+  const filterStatus = document.getElementById("filterStatus");
   let allComplaints = []; // Store all complaints for filtering
 
-  // Add the print button event listener
   const printComplaintBtn = document.getElementById("printComplaintBtn");
   if (printComplaintBtn) {
     printComplaintBtn.addEventListener("click", printComplaintsData);
@@ -16,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fetchComplaints();
 
-  // Event listener for search
+  // Search input listener
   searchInput.addEventListener("input", () => {
     const query = searchInput.value.toLowerCase();
     const filteredComplaints = allComplaints.filter(complaint =>
@@ -26,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     displayComplaints(filteredComplaints);
   });
 
-  // Event listener for filter
+  // Filter dropdown listener
   filterStatus.addEventListener("change", () => {
     const status = filterStatus.value;
     const filteredComplaints = status
@@ -42,8 +41,12 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("complaintId").value = "";
       document.getElementById("createComplaintModalLabel").textContent = "Create Complaint";
       document.getElementById("formErrorMessage").classList.add("d-none");
+      // Hide Date Filed field
+      document.getElementById("dateFiledWrapper").classList.add("d-none");
     } else if (method === "PUT") {
       document.getElementById("createComplaintModalLabel").textContent = "Edit Complaint";
+      // Show Date Filed field
+      document.getElementById("dateFiledWrapper").classList.remove("d-none");
     }
   }
 
@@ -128,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (response.ok) {
-        allComplaints = await response.json(); // Store for filtering
+        allComplaints = await response.json();
         displayComplaints(allComplaints);
       } else if (response.status === 401) {
         localStorage.removeItem("token");

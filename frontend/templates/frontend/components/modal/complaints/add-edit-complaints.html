@@ -20,8 +20,8 @@
         <form id="createComplaintForm" data-method="POST">
           <input type="hidden" id="complaintId" name="complaint_id" />
 
-          <!-- Date Filed (auto-filled, not editable) -->
-          <div class="mb-3">
+          <!-- Date Filed (read-only, hidden on create, visible on edit) -->
+          <div class="mb-3 d-none" id="dateFiledWrapper">
             <label for="dateFiled" class="form-label">Date Filed</label>
             <input
               type="text"
