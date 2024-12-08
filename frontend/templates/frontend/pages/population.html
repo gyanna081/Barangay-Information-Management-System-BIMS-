@@ -13,35 +13,22 @@
       </div>
       <div class="btn-group" role="group" aria-label="Population actions">
         {% if request.user.user_type == "Brgy. Admin" %}
-        <button
-          type="button"
-          class="btn btn-primary btn-sm shadow-sm"
-          data-bs-toggle="modal"
-          data-bs-target="#createPopulationModal"
-          onclick="setFormMethod('POST')"
-        >
+        <button type="button" class="btn btn-primary btn-sm shadow-sm"
+          data-bs-toggle="modal" data-bs-target="#createPopulationModal"
+          onclick="setFormMethod('POST')">
           <i class="fas fa-plus-circle fa-sm me-2"></i>Create Population
         </button>
-        <button
-          type="button"
-          class="btn btn-secondary btn-sm shadow-sm"
-          id="printPopulationBtn"
-        >
+        <button type="button" class="btn btn-secondary btn-sm shadow-sm" id="printPopulationBtn">
           <i class="fas fa-print fa-sm me-2"></i>Print Populations
         </button>
         {% endif %}
       </div>
     </div>
-    <!-- Search and Filter Section -->
     <div class="mt-3 d-flex align-items-center">
-      <input
-        type="text"
-        id="searchInput"
-        class="form-control form-control-sm me-2"
-        placeholder="Search by Barangay or Address..."
-      />
+      <input type="text" id="searchInput" class="form-control form-control-sm me-2"
+        placeholder="Search by Name or Address..." />
       <select id="filterPopulationRange" class="form-select form-select-sm">
-        <option value="">All</option>
+        <option value="">All Populations</option>
         <option value="small">1-500</option>
         <option value="medium">501-1000</option>
         <option value="large">1001+</option>
@@ -54,18 +41,14 @@
 {% block content %}
 <div class="card glass-effect border-0 shadow-lg mb-4">
   <div class="card-body" id="populationContainer">
-    {% if error_message %}
-    <div class="alert alert-danger" role="alert">{{ error_message }}</div>
-    {% else %}
     <p>Population data will be displayed here.</p>
-    {% endif %}
   </div>
 </div>
 
-<!-- Create/Edit Modal component -->
+<!-- Add/Edit Population Modal -->
 {% include 'frontend/components/modal/populations/add-edit-populations.html' %}
 
-<!-- Delete Confirmation Modal -->
+<!-- Delete Population Modal -->
 {% include 'frontend/components/modal/populations/delete-populations.html' %}
 {% endblock %}
 

@@ -5,11 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalElement = document.getElementById("createPopulationModal");
     const modalInstance = new bootstrap.Modal(modalElement);
 
-    const searchInput = document.getElementById("searchInput"); // Search input
-    const filterPopulationRange = document.getElementById("filterPopulationRange"); // Filter dropdown
-    let allPopulations = []; // Store all populations for filtering
+    const searchInput = document.getElementById("searchInput");
+    const filterPopulationRange = document.getElementById("filterPopulationRange");
+    let allPopulations = [];
 
-    // Add the print button event listener
     const printPopulationBtn = document.getElementById("printPopulationBtn");
     if (printPopulationBtn) {
         printPopulationBtn.addEventListener("click", printPopulations);
@@ -37,11 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
     createPopulationForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const data = {
-            id: document.getElementById("populationId").value,
-            barangay_id: document.getElementById("barangayId").value,
-            name: document.getElementById("barangayName").value,
-            address: document.getElementById("barangayAddress").value,
-            population: document.getElementById("barangayPopulation").value,
+            id: document.getElementById("populationId").value || null,
+            name: document.getElementById("name").value,
+            address: document.getElementById("address").value,
+            population: document.getElementById("population").value,
         };
 
         const method = createPopulationForm.dataset.method || "POST";
@@ -52,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: method,
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 },
                 body: JSON.stringify(data),
             });
@@ -70,6 +68,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } catch (error) {
             console.error("Error saving population:", error);
+            document.getElementById("formErrorMessage").textContent = "Network error. Please try again.";
+            document.getElementById("formErrorMessage").classList.remove("d-none");
         }
     });
 
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch(`/brgy/populations/${populationId}/`, {
                 method: "DELETE",
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 },
             });
 
@@ -90,10 +90,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
                 deleteModal.hide();
             } else {
-                console.error("Failed to delete population");
+                const errorMsg = await response.text();
+                console.error("Failed to delete population:", errorMsg);
+                alert("Failed to delete population. Please try again.");
             }
         } catch (error) {
             console.error("Error deleting population:", error);
+            alert("Network error. Unable to delete population.");
         }
     });
 
@@ -107,13 +110,13 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch("/brgy/populations/", {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    "Authorization": `Bearer ${token}`,
                 },
             });
 
             if (response.ok) {
                 const populations = await response.json();
-                allPopulations = populations; // Store for filtering
+                allPopulations = populations;
                 displayPopulations(populations);
             } else if (response.status === 401) {
                 localStorage.removeItem("token");
@@ -148,15 +151,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     .map(
                         (population) => `
                     <tr class="text-center">
-                        <td>${population.id}</td>
+                        <td>${population.id || population.population_id}</td>
                         <td>${population.name}</td>
                         <td>${population.address}</td>
                         <td>${population.population}</td>
                         <td>
                           ${userType === "Brgy. Admin"
                                 ? `
-                            <i class="fas fa-edit me-2 edit-icon" data-id="${population.id}" style="color: #28a745;" data-bs-toggle="tooltip" title="Edit Population"></i>
-                            <i class="fas fa-trash delete-icon" data-id="${population.id}" style="color: #dc3545;" data-bs-toggle="tooltip" title="Delete Population"></i>
+                            <i class="fas fa-edit me-2 edit-icon" data-id="${population.id || population.population_id}" style="color: #28a745; cursor: pointer;" data-bs-toggle="tooltip" title="Edit Population"></i>
+                            <i class="fas fa-trash delete-icon" data-id="${population.id || population.population_id}" style="color: #dc3545; cursor: pointer;" data-bs-toggle="tooltip" title="Delete Population"></i>
                           `
                                 : ""}
                         </td>
@@ -172,8 +175,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (userType === "Brgy. Admin") {
             populations.forEach((population) => {
-                const editIcon = document.querySelector(`.edit-icon[data-id="${population.id}"]`);
-                const deleteIcon = document.querySelector(`.delete-icon[data-id="${population.id}"]`);
+                const populationId = population.id || population.population_id;
+                const editIcon = document.querySelector(`.edit-icon[data-id="${populationId}"]`);
+                const deleteIcon = document.querySelector(`.delete-icon[data-id="${populationId}"]`);
 
                 if (editIcon) {
                     editIcon.addEventListener("click", () => {
@@ -185,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (deleteIcon) {
                     deleteIcon.addEventListener("click", () => {
-                        confirmDeleteBtn.dataset.populationId = population.id;
+                        confirmDeleteBtn.dataset.populationId = populationId;
                         const deleteModal = new bootstrap.Modal(
                             document.getElementById("deletePopulationConfirmationModal")
                         );
@@ -219,11 +223,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function populateForm(population) {
-        document.getElementById("populationId").value = population.id;
-        document.getElementById("barangayId").value = population.barangay_id;
-        document.getElementById("barangayName").value = population.name;
-        document.getElementById("barangayAddress").value = population.address;
-        document.getElementById("barangayPopulation").value = population.population;
+        // Use either id or population_id, with preference for id
+        document.getElementById("populationId").value = population.id || population.population_id;
+        document.getElementById("name").value = population.name;
+        document.getElementById("address").value = population.address;
+        document.getElementById("population").value = population.population;
     }
 
     function printPopulations() {
@@ -260,4 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
         printWindow.document.close();
         printWindow.print();
     }
+
+    // Expose setFormMethod to global scope for Django template
+    window.setFormMethod = setFormMethod;
 });

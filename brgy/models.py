@@ -79,7 +79,7 @@ class Clearance(models.Model):
         return self.name
 
 class Population(models.Model):
-    barangay_id = models.AutoField(primary_key=True)
+    population_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=255)
     population = models.IntegerField()
