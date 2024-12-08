@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <tr class="text-center">
           <th>ID</th>
           <th>Household ID</th>
-          <th>Head</th>
+          <th>Household Head</th>
           <th>Number of Members</th>
           <th>${userType == "Brgy. Admin" ? "Actions" : ""}</th>
         </tr>
