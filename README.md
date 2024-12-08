@@ -110,7 +110,7 @@ The **Barangay Information Management System (BIMS)** provides an efficient and 
 
 ## Links
 
-- **Gantt Chart:** [View here](https://cebuinstituteoftechnology-my.sharepoint.com/:x:/g/personal/geannaricci_pacana_cit_edu/Ef_6t0V0L5xIrbo-nFWUYRwBE-ALFo-Mt81vwhgoaGq4Kw?e=7dE9V7)
+- **Gantt Chart:** [View here](https://cebuinstituteoftechnology-my.sharepoint.com/:x:/g/personal/geannaricci_pacana_cit_edu/EUTEY-uSI71Eg8Ru4h0c6YYBZN3USnktVvsBPcgavKYInA?e=vfXG5u)
 - **UI/UX Design:** [View here](https://www.figma.com/design/cGeJra3y2jRemYDJfZQise/System-UI%2FUX?node-id=0-1)
 - **ERD:** [View here](https://lucid.app/lucidchart/12304d27-045f-4494-a284-0830d7ddd8ae/edit?viewport_loc=718%2C144%2C1233%2C631%2C0_0&invitationId=inv_12ac53d9-1b79-44bb-a6d1-d866e6a50d95)
 
