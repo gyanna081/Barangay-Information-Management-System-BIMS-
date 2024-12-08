@@ -103,7 +103,7 @@ The **Barangay Information Management System (BIMS)** provides an efficient and 
 
 - **Frontend:** HTML, CSS, JavaScript (React for UI components).
 - **Backend:** Python (Django framework).
-- **Database:** Firebase or Google Cloud for data storage.
+- **Database:** Django
 - **Other Tools:** Figma for UI design references.
 
 ---
