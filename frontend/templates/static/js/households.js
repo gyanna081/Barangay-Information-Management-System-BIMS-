@@ -3,12 +3,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
   const createHouseholdForm = document.getElementById("createHouseholdForm");
   const createHouseholdModal = document.getElementById("createHouseholdModal");
+  const deleteConfirmationModal = document.getElementById("deleteConfirmationModal");
   const modalInstance = new bootstrap.Modal(createHouseholdModal);
+  const deleteModalInstance = new bootstrap.Modal(deleteConfirmationModal);
   const searchInput = document.getElementById("searchInput");
   const filterMembers = document.getElementById("filterMembers");
   let allHouseholds = [];
 
   // Fetch households on page load
+  async function fetchHouseholds() {
+    try {
+      const response = await fetch("/brgy/households/");
+      if (!response.ok) throw new Error("Failed to fetch households");
+      const data = await response.json();
+      allHouseholds = data;
+      renderHouseholds(data);
+    } catch (error) {
+      console.error("Error fetching households:", error);
+      householdContainer.innerHTML =
+        '<div class="alert alert-danger">Failed to load household data.</div>';
+    }
+  }
+
   fetchHouseholds();
 
   // Set form method (POST or PUT)
@@ -51,39 +67,14 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!response.ok)
-        throw new Error(
-          method === "PUT"
-            ? "Failed to update household"
-            : "Failed to create household"
-        );
-      alert(
-        method === "PUT"
-          ? "Household updated successfully"
-          : "Household created successfully"
-      );
+      if (!response.ok) throw new Error(`Failed to ${method} household`);
+
       modalInstance.hide();
-      fetchHouseholds();
+      await fetchHouseholds();
     } catch (error) {
       console.error("Error saving household:", error);
-      alert(error.message);
     }
   });
-
-  // Fetch households from the backend
-  async function fetchHouseholds() {
-    try {
-      const response = await fetch("/brgy/households/");
-      if (!response.ok) throw new Error("Failed to fetch households");
-      const data = await response.json();
-      allHouseholds = data;
-      renderHouseholds(data);
-    } catch (error) {
-      console.error("Error fetching households:", error);
-      householdContainer.innerHTML =
-        '<div class="alert alert-danger">Failed to load household data.</div>';
-    }
-  }
 
   // Render households in the table
   function renderHouseholds(households) {
@@ -165,10 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleDeleteClick(event) {
     const householdId = event.target.dataset.id;
     confirmDeleteBtn.dataset.id = householdId;
-    const deleteModal = new bootstrap.Modal(
-      document.getElementById("deleteConfirmationModal")
-    );
-    deleteModal.show();
+    deleteModalInstance.show();
   }
 
   // Confirm delete household
@@ -179,11 +167,11 @@ document.addEventListener("DOMContentLoaded", () => {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete household");
-      alert("Household deleted successfully");
-      fetchHouseholds();
+
+      deleteModalInstance.hide();
+      await fetchHouseholds();
     } catch (error) {
       console.error("Error deleting household:", error);
-      alert(error.message);
     }
   });
 

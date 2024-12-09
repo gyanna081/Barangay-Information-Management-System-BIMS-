@@ -90,7 +90,7 @@
         alert("No data available to print.");
         return;
       }
-      
+
       const clonedTable = table.cloneNode(true);
       const headers = clonedTable.querySelectorAll("th:last-child, td:last-child");
       headers.forEach((header) => header.remove());

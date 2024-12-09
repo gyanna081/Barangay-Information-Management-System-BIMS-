@@ -1,6 +1,10 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
-{% block title %} Business Management {% endblock %}
+
+{% block title %}
+  Business Management
+{% endblock %}
+
 {% block page_title %}
 <div class="card glass-effect border-0 shadow-lg mb-4">
   <div class="card-body">
@@ -51,6 +55,7 @@
   </div>
 </div>
 {% endblock %}
+
 {% block content %}
 
 <div class="card glass-effect border-0 shadow-lg mb-4">
@@ -95,7 +100,6 @@
               id="businessName"
               name="business_name"
               required
-              autocomplete="off"
             />
           </div>
 
@@ -122,7 +126,6 @@
               id="permitNumber"
               name="permit_number"
               required
-              autocomplete="off"
             />
           </div>
 
@@ -153,6 +156,7 @@
 <!-- Delete Confirmation Modal -->
 {% include 'frontend/components/modal/business/delete-business.html' %}
 {% endblock %}
+
 {% block extra_js %}
 <script>
   const userType = "{{ request.user.user_type }}";
