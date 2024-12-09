@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Failed to fetch personnel");
       }
       const data = await response.json();
-      allPersonnel = data; // Store all personnel data for filtering and search
+      allPersonnel = data;
       renderPersonnel(allPersonnel);
     } catch (error) {
       console.error("Error fetching personnel:", error);
@@ -82,7 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
     personnelContainer.innerHTML = "";
     personnelContainer.appendChild(table);
 
-    // Attach event listeners for edit and delete icons
     if (userType == "Brgy. Admin") {
       document.querySelectorAll(".edit-personnel").forEach((icon) => {
         icon.addEventListener("click", handleEditClick);
@@ -92,47 +91,21 @@ document.addEventListener("DOMContentLoaded", () => {
         icon.addEventListener("click", handleDeleteClick);
       });
     }
-
-    // Initialize Bootstrap tooltips
-    const tooltipTriggerList = [].slice.call(
-      document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
-    tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
-  };
-
-  const handleSearchAndFilter = () => {
-    const searchTerm = searchInput.value.toLowerCase();
-    const positionFilter = filterPosition.value;
-
-    const filteredPersonnel = allPersonnel.filter((person) => {
-      const matchesSearch =
-        person.first_name.toLowerCase().includes(searchTerm) ||
-        person.middle_name?.toLowerCase().includes(searchTerm) ||
-        person.last_name.toLowerCase().includes(searchTerm) ||
-        person.position?.toLowerCase().includes(searchTerm);
-
-      const matchesFilter =
-        !positionFilter || person.position === positionFilter;
-
-      return matchesSearch && matchesFilter;
-    });
-
-    renderPersonnel(filteredPersonnel);
   };
 
   const handleEditClick = (event) => {
     const person = JSON.parse(event.target.getAttribute("data-personnel"));
 
     document.getElementById("first_name").value = person.first_name;
-    document.getElementById("middle_name").value = person.middle_name;
+    document.getElementById("middle_name").value = person.middle_name || "";
     document.getElementById("last_name").value = person.last_name;
     document.getElementById("email").value = person.email;
     document.getElementById("birthDate").value = person.birth_date;
     document.getElementById("gender").value = person.gender;
-    document.getElementById("address").value = person.address;
-    document.getElementById("position").value = person.position;
+    document.getElementById("address").value = person.address || "";
+    document.getElementById("position").value = person.position || "";
     document.getElementById("username").value = person.username;
-    document.getElementById("password").value = person.password;
+    document.getElementById("password").value = ""; // Clear password field
     document.getElementById("password").disabled = true;
 
     document.getElementById("createPersonnelModalLabel").textContent =
@@ -151,157 +124,52 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.show();
   };
 
-  const handleDeleteClick = (event) => {
-    const personnelId = event.target.getAttribute("data-personnel-id");
-    document
-      .getElementById("confirmDeleteBtn")
-      .setAttribute("data-personnel-id", personnelId);
-    const modal = new bootstrap.Modal(
-      document.getElementById("deleteConfirmationModal")
-    );
-    modal.show();
-  };
+  document.getElementById("createPersonnelForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-  const deletePersonnel = async (personnelId) => {
+    const form = event.target;
+    const personnelId = form.getAttribute("data-personnel-id");
+    const url = personnelId ? `/brgy/users/${personnelId}/` : "/brgy/users/";
+    const method = personnelId ? "PUT" : "POST";
+
+    const payload = {
+      first_name: form.first_name.value,
+      middle_name: form.middle_name.value || "",
+      last_name: form.last_name.value,
+      email: form.email.value,
+      username: form.username.value,
+      password: personnelId ? undefined : form.password.value, // Only send password for creation
+      birth_date: form.birthDate.value,
+      gender: form.gender.value,
+      address: form.address.value || "",
+      position: form.position.value || "",
+    };
+
     try {
-      const response = await fetch(`/brgy/users/${personnelId}/`, {
-        method: "DELETE",
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete personnel");
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Failed to save personnel");
       }
 
-      alert("Personnel deleted successfully");
-      fetchPersonnel().then(renderPersonnel);
+      alert(
+        personnelId
+          ? "Personnel updated successfully"
+          : "Personnel created successfully"
+      );
+      location.reload();
     } catch (error) {
       console.error("Error:", error);
       alert(error.message);
     }
-  };
-
-  document.getElementById("confirmDeleteBtn").addEventListener("click", (event) => {
-    const personnelId = event.target.getAttribute("data-personnel-id");
-    deletePersonnel(personnelId);
-    const modal = bootstrap.Modal.getInstance(
-      document.getElementById("deleteConfirmationModal")
-    );
-    modal.hide();
   });
-
-  searchInput.addEventListener("input", handleSearchAndFilter);
-  filterPosition.addEventListener("change", handleSearchAndFilter);
 
   fetchPersonnel();
 });
-
-document.getElementById("createPersonnelForm").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const first_name = document.getElementById("first_name").value;
-  const middle_name = document.getElementById("middle_name").value;
-  const last_name = document.getElementById("last_name").value;
-  const email = document.getElementById("email").value;
-  const birthDate = document.getElementById("birthDate").value;
-  const gender = document.getElementById("gender").value;
-  const address = document.getElementById("address").value;
-  const position = document.getElementById("position").value;
-  const personnelId = event.target.getAttribute("data-personnel-id");
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-
-  const url = personnelId ? `/brgy/users/${personnelId}/` : "/brgy/users/";
-  const method = personnelId ? "PUT" : "POST";
-
-  try {
-    const response = await fetch(url, {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        first_name,
-        middle_name,
-        last_name,
-        email,
-        username,
-        password,
-        birth_date: birthDate,
-        gender,
-        address,
-        position,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        personnelId
-          ? "Failed to update personnel"
-          : "Failed to create personnel"
-      );
-    }
-
-    alert(
-      personnelId
-        ? "Personnel updated successfully"
-        : "Personnel created successfully"
-    );
-    location.reload();
-  } catch (error) {
-    console.error("Error:", error);
-    alert(error.message);
-  }
-});
-
-// Reset modal form when hidden
-document.getElementById("createPersonnelModal").addEventListener("hidden.bs.modal", () => {
-  document.getElementById("createPersonnelModalLabel").textContent =
-    "Create Personnel";
-  document.querySelector(
-    '#createPersonnelForm button[type="submit"]'
-  ).textContent = "Submit";
-  document
-    .getElementById("createPersonnelForm")
-    .removeAttribute("data-personnel-id");
-  document.getElementById("createPersonnelForm").reset();
-
-  const passwordField = document.getElementById("password");
-  passwordField.disabled = false;
-});
-
-// Print functionality
-const printPersonnelData = () => {
-  const printWindow = window.open("", "_blank");
-  const personnelTable = document
-    .querySelector("#personnelContainer table")
-    .cloneNode(true);
-
-  personnelTable
-    .querySelectorAll("thead th:last-child, tbody td:last-child")
-    .forEach((el) => el.remove());
-
-  const printContent = `
-    <html>
-      <head>
-        <title>Personnel Data</title>
-        <style>
-          body { font-family: Arial, sans-serif; }
-          table { border-collapse: collapse; width: 100%; }
-          th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-          th { background-color: #f2f2f2; }
-        </style>
-      </head>
-      <body>
-        <h3>Personnel Table</h3>
-        ${personnelTable.outerHTML}
-      </body>
-    </html>
-  `;
-
-  printWindow.document.write(printContent);
-  printWindow.document.close();
-  printWindow.print();
-};
-
-document
-  .getElementById("printRecordBtn")
-  .addEventListener("click", printPersonnelData);
