@@ -93,7 +93,6 @@ The **Barangay Information Management System (BIMS)** provides an efficient and 
 
 ## Key Interface Features
 
-- **User Dashboard:** Displays an overview of barangay activities and statistics.
 - **Navigation Menu:** Provides easy access to Residents, Households, Sitio Management, and other modules.
 - **Search and Filter:** Quickly find records in all modules using the search bar and filter options.
 - **Responsive Design:** Accessible on desktop and mobile devices.
