@@ -77,6 +77,19 @@ The **Barangay Information Management System (BIMS)** provides an efficient and 
 - Generate demographic reports.
 
 ---
+### 8. Business Permit Management
+**Purpose:** Manage and issue permits for businesses operating within the barangay.
+
+**Features:**
+
+- View all businesses including details.
+- Add new businesses.
+- Edit and delete business records.
+- Search businesses by name.
+- Filter businesses by type.
+- Print businesses permit details for documentation purposes.
+
+---
 
 ## Key Interface Features
 
