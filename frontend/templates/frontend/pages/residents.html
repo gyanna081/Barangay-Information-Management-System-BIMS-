@@ -1,91 +1,95 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
 
-{% block title %} Residents {% endblock %}
+{% block title %}
+  Residents
+{% endblock %}
 
 {% block page_title %}
-<div class="card glass-effect border-0 shadow-lg mb-4">
-  <div class="card-body">
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="d-flex align-items-center">
-        <i class="fas fa-users fa-fw me-3" style="font-size: 1.2rem"></i>
-        <h6 class="fw-bold mb-0 text-sm text-gradient">Residents</h6>
+  <div class="card glass-effect border-0 shadow-lg mb-4">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-users fa-fw me-3" style="font-size: 1.2rem"></i>
+          <h6 class="fw-bold mb-0 text-sm text-gradient">Residents</h6>
+        </div>
+        <div class="btn-group" role="group" aria-label="Resident actions">
+          {% if request.user.user_type == "Brgy. Admin" %}
+            <button
+              type="button"
+              class="btn btn-primary btn-sm shadow-sm"
+              data-bs-toggle="modal"
+              data-bs-target="#createResidentModal"
+              onclick="setFormMethod('POST')"
+            >
+              <i class="fas fa-plus-circle fa-sm me-2"></i>Create Resident
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm shadow-sm"
+              id="printRecordBtn"
+            >
+              <i class="fas fa-print fa-sm me-2"></i>Print Record
+            </button>
+          {% endif %}
+        </div>
       </div>
-      <div class="btn-group" role="group" aria-label="Resident actions">
-        {% if request.user.user_type == "Brgy. Admin" %}
-        <button
-          type="button"
-          class="btn btn-primary btn-sm shadow-sm"
-          data-bs-toggle="modal"
-          data-bs-target="#createResidentModal"
-          onclick="setFormMethod('POST')"
-        >
-          <i class="fas fa-plus-circle fa-sm me-2"></i>Create Resident
-        </button>
-        <button
-          type="button"
-          class="btn btn-secondary btn-sm shadow-sm"
-          id="printRecordBtn"
-        >
-          <i class="fas fa-print fa-sm me-2"></i>Print Record
-        </button>
-        {% endif %}
-      </div>
-    </div>
 
-    <!-- Search and Filter Section -->
-    <div class="mt-3 row">
-      <div class="col-md-4 mb-2">
-        <input
-          type="text"
-          id="searchInput"
-          class="form-control form-control-sm"
-          placeholder="Search by Name or ID..."
-        />
-      </div>
-      <div class="col-md-4 mb-2">
-        <select id="filterGender" class="form-select form-select-sm">
-          <option value="">All Genders</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-        </select>
-      </div>
-      <div class="col-md-4 mb-2">
-        <select id="filterCivilStatus" class="form-select form-select-sm">
-          <option value="">All Civil Status</option>
-          <option value="Single">Single</option>
-          <option value="Married">Married</option>
-          <option value="Widowed">Widowed</option>
-          <option value="Divorced">Divorced</option>
-          <option value="Separated">Separated</option>
-        </select>
+      <!-- Search and Filter Section -->
+      <div class="mt-3 row">
+        <div class="col-md-4 mb-2">
+          <input
+            type="text"
+            id="searchInput"
+            class="form-control form-control-sm"
+            placeholder="Search by Name or ID..."
+          />
+        </div>
+        <div class="col-md-4 mb-2">
+          <select id="filterGender" class="form-select form-select-sm">
+            <option value="">All Genders</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div class="col-md-4 mb-2">
+          <select id="filterCivilStatus" class="form-select form-select-sm">
+            <option value="">All Civil Status</option>
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+            <option value="Widowed">Widowed</option>
+            <option value="Divorced">Divorced</option>
+            <option value="Separated">Separated</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
-</div>
 {% endblock %}
 
 {% block content %}
-<div class="card glass-effect border-0 shadow-lg mb-4">
-  <div class="card-body" id="residentContainer">
-    {% if error_message %}
-    <div class="alert alert-danger" role="alert">{{ error_message }}</div>
-    {% else %}
-    <p>Resident data will be displayed here.</p>
-    {% endif %}
+  <div class="card glass-effect border-0 shadow-lg mb-4">
+    <div class="card-body" id="residentContainer">
+      {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+          {{ error_message }}
+        </div>
+      {% else %}
+        <p>Resident data will be displayed here.</p>
+      {% endif %}
+    </div>
   </div>
-</div>
 
-<!-- Create/Edit Modal component -->
-{% include 'frontend/components/modal/residents/add-edit-residents.html' %}
+  <!-- Create/Edit Modal component -->
+  {% include 'frontend/components/modal/residents/add-edit-residents.html' %}
 
-<!-- Delete Confirmation Modal -->
-{% include 'frontend/components/modal/residents/delete-residents.html' %}
+  <!-- Delete Confirmation Modal -->
+  {% include 'frontend/components/modal/residents/delete-residents.html' %}
 {% endblock %}
 
 {% block extra_js %}
-<script>
-  const userType = "{{ request.user.user_type }}";
-</script>
-<script src="{% static 'js/residents.js' %}"></script>
+  <script>
+    const userType = "{{ request.user.user_type }}";
+  </script>
+  <script src="{% static 'js/residents.js' %}"></script>
 {% endblock %}

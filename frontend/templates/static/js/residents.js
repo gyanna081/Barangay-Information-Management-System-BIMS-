@@ -1,23 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const logoutBtn = document.getElementById("logout-btn");
   const residentsList = document.getElementById("residentContainer");
   const createResidentForm = document.getElementById("createResidentForm");
   const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
   const modalElement = document.getElementById("createResidentModal");
   const modalInstance = new bootstrap.Modal(modalElement);
   const printBtn = document.getElementById("printRecordBtn");
-  const createResidentBtn = document.getElementById("createResidentBtn"); // New Button Reference
-
+  const searchInput = document.getElementById("searchInput");
+  const filterGender = document.getElementById("filterGender");
+  const filterCivilStatus = document.getElementById("filterCivilStatus");
   let residentsData = [];
-
-  // Logout button functionality
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", (event) => {
-      event.preventDefault();
-      localStorage.removeItem("token");
-      window.location.href = "/";
-    });
-  }
 
   // Fetch residents on page load
   fetchResidents();
@@ -25,16 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set form method (POST or PUT)
   function setFormMethod(method) {
     createResidentForm.dataset.method = method;
-
     if (method === "POST") {
       createResidentForm.reset();
       document.getElementById("residentId").value = "";
-      document.getElementById("createResidentModalLabel").textContent =
-          "Create Resident";
+      document.getElementById("createResidentModalLabel").textContent = "Create Resident";
       document.getElementById("formErrorMessage").classList.add("d-none");
     } else if (method === "PUT") {
-      document.getElementById("createResidentModalLabel").textContent =
-          "Edit Resident";
+      document.getElementById("createResidentModalLabel").textContent = "Edit Resident";
     }
   }
 
@@ -50,9 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(createResidentForm);
     const data = Object.fromEntries(formData.entries());
     const method = createResidentForm.dataset.method || "POST";
-    const residentId = document.getElementById("residentId").value; // Get resident ID for PUT
-    const url =
-        method === "PUT" ? `/brgy/residents/${residentId}/` : "/brgy/residents/";
+    const residentId = document.getElementById("residentId").value;
+    const url = method === "PUT" ? `/brgy/residents/${residentId}/` : "/brgy/residents/";
 
     try {
       const response = await fetch(url, {
@@ -63,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         body: JSON.stringify(data),
       });
-
       if (response.ok) {
         fetchResidents();
         createResidentForm.reset();
@@ -72,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         const errorMsg = await response.json();
         document.getElementById("formErrorMessage").textContent =
-            errorMsg.error || "Failed to save resident.";
+          errorMsg.error || "Failed to save resident.";
         document.getElementById("formErrorMessage").classList.remove("d-none");
       }
     } catch (error) {
@@ -90,12 +76,9 @@ document.addEventListener("DOMContentLoaded", () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-
       if (response.ok) {
         fetchResidents();
-        const modal = bootstrap.Modal.getInstance(
-            document.getElementById("deleteConfirmationModal")
-        );
+        const modal = bootstrap.Modal.getInstance(document.getElementById("deleteConfirmationModal"));
         modal.hide();
       } else {
         console.error("Failed to delete resident");
@@ -112,14 +95,12 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "/";
       return;
     }
-
     try {
       const response = await fetch("/brgy/residents/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
       if (response.ok) {
         residentsData = await response.json();
         displayResidents(residentsData);
@@ -128,13 +109,11 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "/";
       } else {
         console.error("Failed to fetch residents");
-        residentsList.innerHTML =
-            "<p>Failed to load residents. Please try again later.</p>";
+        residentsList.innerHTML = "<p>Failed to load residents. Please try again later.</p>";
       }
     } catch (error) {
       console.error("Error fetching residents:", error);
-      residentsList.innerHTML =
-          "<p>An error occurred while loading residents. Please try again later.</p>";
+      residentsList.innerHTML = "<p>An error occurred while loading residents. Please try again later.</p>";
     }
   }
 
@@ -157,39 +136,29 @@ document.addEventListener("DOMContentLoaded", () => {
       </thead>
       <tbody>
         ${residents
-        .map(
+          .map(
             (resident) => `
             <tr class="text-center">
               <td>${resident.id}</td>
-              <td>${resident.first_name} ${resident.middle_name || ""} ${
-                resident.last_name
-            }</td>
+              <td>${resident.first_name} ${resident.middle_name || ""} ${resident.last_name}</td>
               <td>${resident.birth_date}</td>
               <td>${resident.gender}</td>
               <td>${resident.civil_status}</td>
               <td>${resident.contact_number}</td>
               <td>${resident.address}</td>
               <td>
-                ${
-                userType === "Brgy. Admin"
-                    ? `
-                  <i class="fas fa-edit me-2 edit-icon" data-id="${
-                        resident.id
-                    }" style="color: #28a745;" title="Edit Resident"></i>
-                  <i class="fas fa-trash delete-icon" data-id="${
-                        resident.id
-                    }" style="color: #dc3545;" title="Delete Resident"></i>
-                `
-                    : ""
-            }
+                ${userType === "Brgy. Admin"
+                  ? `
+                    <i class="fas fa-edit me-2 edit-icon" data-id="${resident.id}" style="color: #28a745;" title="Edit Resident"></i>
+                    <i class="fas fa-trash delete-icon" data-id="${resident.id}" style="color: #dc3545;" title="Delete Resident"></i>
+                  `
+                  : ""}
               </td>
-            </tr>
-          `
-        )
-        .join("")}
+            </tr>`
+          )
+          .join("")}
       </tbody>
     `;
-
     residentsList.innerHTML = "";
     residentsList.appendChild(table);
 
@@ -203,18 +172,39 @@ document.addEventListener("DOMContentLoaded", () => {
           modalInstance.show();
         });
       });
-
       document.querySelectorAll(".delete-icon").forEach((deleteIcon) => {
         deleteIcon.addEventListener("click", () => {
           confirmDeleteBtn.dataset.residentId = deleteIcon.dataset.id;
-          const modal = new bootstrap.Modal(
-              document.getElementById("deleteConfirmationModal")
-          );
+          const modal = new bootstrap.Modal(document.getElementById("deleteConfirmationModal"));
           modal.show();
         });
       });
     }
   }
+
+  // Filter residents based on search and filters
+  function filterResidents() {
+    const searchValue = searchInput.value.toLowerCase();
+    const selectedGender = filterGender.value;
+    const selectedCivilStatus = filterCivilStatus.value;
+
+    const filteredResidents = residentsData.filter((resident) => {
+      const matchesSearch =
+        resident.first_name.toLowerCase().includes(searchValue) ||
+        resident.last_name.toLowerCase().includes(searchValue) ||
+        String(resident.id).includes(searchValue);
+      const matchesGender = !selectedGender || resident.gender === selectedGender;
+      const matchesCivilStatus = !selectedCivilStatus || resident.civil_status === selectedCivilStatus;
+
+      return matchesSearch && matchesGender && matchesCivilStatus;
+    });
+
+    displayResidents(filteredResidents);
+  }
+
+  searchInput.addEventListener("input", filterResidents);
+  filterGender.addEventListener("change", filterResidents);
+  filterCivilStatus.addEventListener("change", filterResidents);
 
   // Populate form for editing a resident
   function populateForm(resident) {
@@ -225,21 +215,16 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("birthDate").value = resident.birth_date || "";
     document.getElementById("gender").value = resident.gender || "";
     document.getElementById("civilStatus").value = resident.civil_status || "";
-    document.getElementById("contactNumber").value =
-        resident.contact_number || "";
+    document.getElementById("contactNumber").value = resident.contact_number || "";
     document.getElementById("address").value = resident.address || "";
   }
 
   // Print residents data
   function printResidentsData() {
     const printWindow = window.open("", "_blank");
-    const table = document
-        .querySelector("#residentContainer table")
-        .cloneNode(true);
-
+    const table = document.querySelector("#residentContainer table").cloneNode(true);
     const headers = table.querySelectorAll("th");
     const rows = table.querySelectorAll("tbody tr");
-
     headers[headers.length - 1].remove();
     rows.forEach((row) => row.deleteCell(-1));
 
@@ -260,21 +245,12 @@ document.addEventListener("DOMContentLoaded", () => {
         </body>
       </html>
     `;
-
     printWindow.document.write(printContent);
     printWindow.document.close();
     printWindow.print();
   }
 
-  // Add event listener for print button
   if (printBtn) {
     printBtn.addEventListener("click", printResidentsData);
-  }
-
-  // Add event listener for create button
-  if (createResidentBtn) {
-    createResidentBtn.addEventListener("click", () => {
-      setFormMethod("POST");
-    });
   }
 });
