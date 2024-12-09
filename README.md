@@ -94,8 +94,8 @@ The **Barangay Information Management System (BIMS)** provides an efficient and 
 - Create, edit, delete records and manage complaints.
 
 ### Staff
-- Limited access based on assigned roles.
-- Perform specific tasks like updating records or generating reports.
+- Limited access only.
+
 
 ---
 
